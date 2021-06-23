@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>南北大战3.0：南北大种</title>
+  <link rel="Shortcut Icon" href="./icon.ico" type="image/x-icon" />
+  <style>
+    body {
+      background-color: rgb(255, 228, 17);
+    }
+    .lineCenter {
+      text-align: center;
+    }
+    input {
+      margin: 0;
+      outline-style: none;
+      border: 0;
+      border-radius: 3px;
+      padding: 5px 8px;
+      font-size: 15px;
+    }
+    /* chrome */ 
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button { 
+      -webkit-appearance: none; 
+    }
+    /* 火狐浏览器 */
+    input[type="number"]{ 
+      -moz-appearance: textfield; 
+    }
+    .form-group {
+      margin: 0 0 10px 0;
+    }
+    Button {
+      font-size: 18px;
+      font-weight: 1000;
+      padding: 6px 35px;
+    }
+    #outputBox {
+      padding: 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <h3 class="lineCenter">南北大战3.0：南北大种</h3>
+  <h1 class="lineCenter">策略分析工具</h1>
+  <form class="lineCenter">
+    <div class="form-group">
+      <label for="physicalPower" >体&nbsp;&nbsp;&nbsp;&nbsp;力：</label>
+      <input type="number" class="form-input" min="0" max="999" id="physicalPower">
+    </div>
+    <div class="form-group">
+      <label for="needFertilize" >待施肥：</label>
+      <input type="number" class="form-input" min="0" id="needFertilize">
+    </div>
+    <div class="form-group">
+      <label for="needHarvest" >待收割：</label>
+      <input type="number" class="form-input" min="0" id="needHarvest">
+    </div>
+  </form>
+  <div class="buttonBox lineCenter">
+    <Button onclick="getOutput()">获取策略</Button>
+    <Button onclick="cleanUp()">清空</Button>
+  </div>
+  <div id="outputBox"></div>
+  <script>
+    function getOutput() {
+      let outputBox = document.getElementById("outputBox").innerHTML;
+      // 体力
+      let physicalPower = Number(document.getElementById("physicalPower").value);
+      if(physicalPower > 999 || physicalPower < 0){
+        document.getElementById("outputBox").innerHTML=`<p style="color: red">体力值应该在 0-999 之间</p>`;
+        return;
+      } else if(physicalPower < 6) {
+        document.getElementById("outputBox").innerHTML=`<p style="color: red">您受累了，建议休息一下。</p>`;
+        return;
+      }
+
+      // 待施肥
+      const needFertilize = Number(document.getElementById("needFertilize").value);
+      if(needFertilize < 0){
+        document.getElementById("outputBox").innerHTML=`<p style="color: red">待施肥数量应该大于等于 0/p>`
+        return;
+      }
+
+      // 待收割
+      const needHarvest = Number(document.getElementById("needHarvest").value);
+      if(needHarvest < 0){
+        document.getElementById("outputBox").innerHTML=`<p style="color: red">待收割数量应该大于等于 0</p>`
+        return;
+      }
+
+      // 播种数、施肥数、收割数
+      let myHarvest, myFertilize, mySowing;
+
+      if(needHarvest > 0 && needHarvest >= physicalPower/3){
+        // 全力收割
+        myHarvest = Math.floor(physicalPower/3);
+        document.getElementById("outputBox").innerHTML=`<p>推荐策略：请全力收割，预计收割 ${myHarvest} 颗稻子</p>`
+        return;
+      } else {
+        myHarvest = needHarvest;
+        physicalPower -= myHarvest * 3;
+        if(needFertilize >= Math.floor(physicalPower/5)){
+          // 全力收割，均衡施肥-收割
+          myFertilize = Math.floor(physicalPower/5);
+          myHarvest += myFertilize;
+          document.getElementById("outputBox").innerHTML=`<p>推荐策略：请先全力收割，再均衡施肥-收割。</p><p>具体操作：依次施肥 ${myFertilize} 颗稻子，收割 ${myHarvest} 颗稻子。</p>`
+          return;
+        } else {
+          // 全力施肥-收割
+          myFertilize = needFertilize;
+          myHarvest += needFertilize;
+          physicalPower -= needFertilize * 5;
+          // 播种-施肥-收割
+          mySowing = Math.floor(physicalPower/6);
+          myHarvest += mySowing;
+          myFertilize += mySowing;
+          document.getElementById("outputBox").innerHTML=`<p>推荐策略：请先全力施肥、收割，再均衡播种-施肥-收割。</p><p>具体操作：依次播种 ${mySowing} 颗稻子，施肥 ${myFertilize} 颗稻子，收割 ${myHarvest} 颗稻子。</p>`;
+          return;
+        }
+      }
+    }
+    
+    function cleanUp() {
+      document.getElementById("physicalPower").value = 0;
+      document.getElementById("needFertilize").value = 0;
+      document.getElementById("needHarvest").value = 0;
+      document.getElementById("outputBox").innerHTML=``;
+      return;
+    }
+  </script>
+</body>
+</html>
