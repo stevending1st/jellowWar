@@ -55,24 +55,24 @@
       <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/stevending1st/jellowWar">
     </a>
   </p>
-  <p>请输入当前体力、待施肥数量、待收割数量即获取当前团队最佳策略。<span style="color: #999">如有翻车概不负责。</span></p>
+  <p style="margin: 0 20px 20px;">请输入当前体力、待施肥数量、待收割数量即获取当前团队最佳策略。<span style="color: #999">如有翻车概不负责。</span></p>
   <form class="lineCenter">
     <div class="form-group">
       <label for="physicalPower" >体&nbsp;&nbsp;&nbsp;&nbsp;力：</label>
-      <input type="number" class="form-input" min="0" max="999" id="physicalPower">
+      <input type="number" min="0" max="999" id="physicalPower">
     </div>
     <div class="form-group">
       <label for="needFertilize" >待施肥：</label>
-      <input type="number" class="form-input" min="0" id="needFertilize">
+      <input type="number" min="0" id="needFertilize">
     </div>
     <div class="form-group">
       <label for="needHarvest" >待收割：</label>
-      <input type="number" class="form-input" min="0" id="needHarvest">
+      <input type="number" min="0" id="needHarvest">
     </div>
   </form>
   <div class="buttonBox lineCenter">
     <Button onclick="getOutput()">获取策略</Button>
-    <Button onclick="cleanUp()">清空</Button>
+    <Button onclick="cleanUp()">清理</Button>
   </div>
   <div id="outputBox"></div>
   <script>
